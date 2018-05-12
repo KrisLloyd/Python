@@ -30,8 +30,7 @@ def start_calendar():
         print "The calendar should print here..."
         print calendar
     elif user_choice == "U":
-      date = raw_input("What date would you like to update? ")
-      update = raw_input("Please enter the update: ")
+      date = raw_input("What date would you like to update? (MM/DD/YYYY) ")
       if (10 < len(date) < 10) or (int(date[6:]) < int(strftime("%Y"))) or (int(date[:2]) not in range(1, 13)) or (int(date[3:5]) not in range(1, 31)):
         print "An invalid date was entered."
         try_again = raw_input("Would you like to try again? (Y/N) ")
@@ -40,11 +39,15 @@ def start_calendar():
           continue
         else:
           start = False
-      calendar[date] = update
-      print "Updating..."
-      sleep(1)
-      print "Update completed."
-      print calendar
+      print "\nFound the following event(s) on %s:" % (date)
+      print calendar[date]
+      event = raw_input("\nWhich event would you like to update? ")
+      if event in calendar[date]:
+        calendar[date][calendar[date].index(event)] = raw_input("\nWarning, this action will overwrite the previous entry.\nWhat would you like to update this entry with?\nUpdate for '%s' on '%s': " % (event, date))
+        print "Updating..."
+        sleep(1)
+        print "Update completed."
+        print calendar
     elif user_choice == "A":
       event = raw_input("What event would you like to add? ")
       date = raw_input("What is the date of the event? (MM/DD/YYYY) : ")
@@ -72,10 +75,10 @@ def start_calendar():
         for date in calendar.keys():
           if event in calendar[date]:
             count += 1
-            print
-            print "Matching event foind on date %s" % (date)
             delete_list.append(date)
-        print "Found %s matches" % (count)
+        print
+        print "Found %s matche(s)" % (count)
+        print "Matching event foind on date %s" % (date)
         if count > 0:
           print
           delete_event = raw_input("Which date would you like to remove? (MM/DD/YYYY) ")
@@ -90,13 +93,14 @@ def start_calendar():
           calendar[date].remove(event)
           print "Event %s was sucessfully deleted from %s." % (event, date)
     elif user_choice == "X":
-      pass
+      user_input = raw_input("\nAre you sure you want to quit? (Y/N) ")
+      user_input = user_input.upper()
+      if user_input == "Y":
+        start = False
+      else:
+        continue
+    else:
+      print "\nInvalid menu option. Please try again.\n"
+      continue
     
 start_calendar()
-
-
-
-
-
-
-
