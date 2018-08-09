@@ -1,0 +1,30 @@
+#!/bin/python3
+
+import math
+import os
+import random
+import re
+import sys
+
+# Complete the plusMinus function below.
+def plusMinus(arr):
+    plus = 0;
+    minus = 0;
+    zero = 0;
+    for item in range(len(arr)):
+        if arr[item] > 0:
+            plus +=1;
+        elif arr[item] < 0:
+            minus +=1;
+        else:
+            zero +=1;
+    print(str(round((plus/len(arr)), 6)))
+    print(str(round((minus/len(arr)), 6)))
+    print(str(round((zero/len(arr)), 6)))
+
+if __name__ == '__main__':
+    n = int(input())
+
+    arr = list(map(int, input().rstrip().split()))
+
+    plusMinus(arr)
