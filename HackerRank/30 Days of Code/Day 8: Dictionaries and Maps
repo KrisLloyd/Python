@@ -1,0 +1,14 @@
+entries=input();
+phonebook={};
+for i in range(int(entries)):
+    key, value = input().split();
+    phonebook[key]=value;
+while True:
+    try:
+        search=input();
+        if search in phonebook:
+            print('%s=%s' % (search, phonebook[search]))
+        else:
+            print("Not found")
+    except:
+        break;
