@@ -1,0 +1,6 @@
+T = input();
+for i in range(int(T)):
+    S = input();
+    e = S[0:len(S):2]
+    o = S[1:len(S):2]
+    print(e, o)
