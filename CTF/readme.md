@@ -2,6 +2,10 @@
 
 ### BIT Olymipcs (March 2020)
 
+#### [ Results ]
+
+* TeamK - 1200 Points (1 member)
+
 ![Results](BIT_CTF_Results.png)
 
 #### [ Reverse Engineering ]
