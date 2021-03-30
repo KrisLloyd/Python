@@ -2,7 +2,7 @@
 
 ### BIT Olymipcs (March 2020)
 
-![Results](BIT_CTF_Results.PNG)
+![Results](BIT_CTF_Results.png)
 
 #### [ Reverse Engineering ]
 
