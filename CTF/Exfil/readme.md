@@ -46,4 +46,7 @@ With the corect bytes selected, the image file was sucessfully written, and I wa
 
 ![pcap Inspection](out.png)
 
-##### flag{not_so_stealthy_exfil}
+### Flag
+```
+flag{not_so_stealthy_exfil}
+```
