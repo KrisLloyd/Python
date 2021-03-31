@@ -10,7 +10,7 @@
 ### Solve:
 
 
-![QR code decoder](https://zxing.org/w/decode.jspx)
+[QR code decoder](https://zxing.org/w/decode.jspx)
 
 Finally, the flag!
 
