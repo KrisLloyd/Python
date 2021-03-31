@@ -17,7 +17,7 @@ Using an online [QR code decoder](https://zxing.org/w/decode.jspx) tool, I was a
 
 Finally, the flag!
 
-![Decode_QR](Decode_QR.png)
+![Decode_QR](Decode_QR.PNG)
 
 ```
 GLUG{S33ms_l1k3_th3_wr0n9_fl49}
