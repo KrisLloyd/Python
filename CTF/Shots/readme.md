@@ -13,6 +13,8 @@ The file that comes with the challenge does not have an extension provided, howe
 
 Insize the archive there were 2 folders, **lost+found** and **[SYS]**. Inside the [SYS] folder was a single file **Journal**.
 
+[Journal](Journal)
+
 Opening the Journal file in a hex editor provided no relevant information as to its source. A quick Google search suggested that the file, when associated with SD cards should have the file extension of **.dat** so I made a copy of the Jornal file to test with.
 
 
