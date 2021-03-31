@@ -1,7 +1,5 @@
 # Ex or me
 
-![Exfil Challenge](Exfil.PNG)
-
 ### Challenge:
 ##### uvr}hb#hL+&Euo]Ea+*r$g
 ##### 100 Points
