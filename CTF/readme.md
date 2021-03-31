@@ -37,3 +37,6 @@
 
 #### [ Misc ]
 * [From Japan with Love](./Japan)
+
+#### [ Forensics/Steg ]
+* [Shots](./Shots)
