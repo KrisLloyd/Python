@@ -15,8 +15,12 @@ Insize the archive there were 2 folders, **lost+found** and **[SYS]**. Inside th
 
 [Journal](Journal)
 
-Opening the Journal file in a hex editor provided no relevant information as to its source. A quick Google search suggested that the file, when associated with SD cards should have the file extension of **.dat** so I made a copy of the Jornal file to test with.
+Opening the Journal file in a hex editor showed that the file has the signiture **0xc03b3998** showing that it is an Ext3 filesystem journal. Knowing what I'm dealing with, I can use this to attempt to recover the deleted files.
 
+There is an article [Restoring Deleted Files in Linux from the ext3 Journal](https://spin.atomicobject.com/2012/06/29/restoring-deleted-files-from-the-ext3-journal/) that outlines the process to recover deleted files. I will attempt this strategy next.
+
+
+- Side note - 
 
 Exploring the challenge creators GitHub, I also discovered a CTF repository that contained a 'Stego' folder with a single image.
 
