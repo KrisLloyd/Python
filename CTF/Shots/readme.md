@@ -64,8 +64,18 @@ Maybe this is what you want: GLUG{#####wrong_file#####}
 Maybe "this" is what you want: GLUG{####################}
 ```
 
-My next move is to perform a LSB decode on the PNG file.
+The key word is **this** so it must be a password or important string. My next move is to perform a LSB decode on the PNG file. To perform a LSB decode on a PNG file, I used zsteg. Nothing really came from the search, expanding the search using more bits didn't help either.
 
+```
+┌──(kali㉿kali)-[~/Desktop/output/png]
+└─$ zsteg ./00004832.png 2b,lsb,xy
+b2,b,lsb,xy         .. text: "=,UUUUUU@"
+b2,rgb,lsb,xy       .. text: ".\"\"&2`>d"
+```
+
+On github there was a [LSB Image Steganography Tool](https://github.com/ra1nb0rn/lsb_image_stego) that seemed to offer exactly what I was looking for. A simple run of this python program using the password **this** revealed the flag.
+
+[recovered.txt](recovered.txt)
 
 ### Flag
 ```
