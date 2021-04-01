@@ -1,4 +1,4 @@
-[< Back to All CTFs](https://github.com/KrisLloyd/Python/tree/master/CTF)
+[< Back to All CTFs](https://github.com/KrisLloyd/Python/tree/master/CTF#ctf-solves)
 ***
 
 # Ropes
