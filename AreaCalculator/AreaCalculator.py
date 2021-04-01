@@ -5,7 +5,7 @@ def units():
       units = input("Please enter the units of measure (cm, m, km, ( 'x' to exit)): ")
       if units.lower() in ['cm', 'm', 'km', 'x']:
         if units.lower() == 'x':
-          return '-1'
+          return -1
         break
   return units.lower()
 
@@ -13,7 +13,7 @@ def getNum(s):
   while True:
       num = input(s)
       if num.lower() == 'x':
-        return '-1'
+        return -1
       if num.isnumeric() and float(num) > 0:
         num = float(num)
         break
@@ -26,7 +26,7 @@ def shape():
     option = input("[c] - Circle\n[r] - Rectangle\n[s] - Square\n[t] - Triangle\n[x] - Exit: ")
     if option.lower() in ['c', 'r', 's', 't', 'x']:
       if option.lower() == 'x':
-        return '-1'
+        return -1
       break
   
   # Circle
