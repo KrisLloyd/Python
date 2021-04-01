@@ -44,7 +44,9 @@ foremost -i sdcard
 I loaded some images into [StegOnline](https://stegonline.georgeom.net/) and did some initial browsing of the colour planes and the bit planes. From the few files I looked at, there was no hidden information that was visible. 
 
 The challenge creator released a hint by editing the challenge hint: 
-**L**esly accidently deleted her photos from camera. **S**he gave you the camera to figure it out. **B**TW, Lesly is Marvel fan.
+**L**esly accidently deleted her photos from camera. 
+**S**he gave you the camera to figure it out. 
+**B**TW, Lesly is Marvel fan.
 
 This hints that the flag is hiden in the LSB of the file(s).
 
