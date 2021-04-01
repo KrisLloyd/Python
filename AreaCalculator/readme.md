@@ -1,4 +1,4 @@
-[< Back to About](https://github.com/KrisLloyd/Python)
+[< Back to About](https://github.com/KrisLloyd/Python#python)
 ***
 
 # About
