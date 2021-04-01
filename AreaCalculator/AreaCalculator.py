@@ -45,6 +45,8 @@ def shape():
     if unit == -1:
       return unit
     side = getNum("Please enter the length of one side ('x' to exit): ")
+    if side == -1:
+      return side
     area = side**2
     return "Square with side length {side:.2f}{units} has an area of {area:.2f}{units}\u00b2".format(side = side, units = unit, area = area)
   elif option.lower() == 'r': 
@@ -53,7 +55,11 @@ def shape():
     if unit == -1:
       return unit
     length = getNum("Please enter the length of the rectangle ('x' to exit): ")
+    if length == -1:
+      return length
     width = getNum("Please enter the width of the rectangle ('x' to exit): ")
+    if width == -1:
+      return width
     area = length * width
     return "Rectangle with side length {length:.2f}{units} and width length {width:.2f}{units} has an area of {area:.2f}{units}\u00b2".format(length = length, width = width, units = unit, area = area)
   else:
@@ -62,7 +68,11 @@ def shape():
     if unit == -1:
       return unit
     base = getNum("Please enter the length of the base of the triangle ('x' to exit): ")
+    if base == -1:
+      return base
     height = getNum("Please enter the height of the triangle ('x' to exit): ")
+    if height == -1:
+      return height
     area = (0.5 * base * height)
     return "Triangle with the base of {base:.2f}{units} and a height of {height:.2f}{units} has an area of {area}{units}\u00b2".format(base = base, units = unit, height = height, area = area)
   
