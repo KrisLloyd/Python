@@ -37,12 +37,16 @@ Sadly this didn't yield any results. Time to dig deeper, upnext is zsteg and for
 [=] nothing :( 
 ```
 
-Both tools came up empty.
+Both tools came up empty. Asking for a hint from the content creator, I was given the hint "observe the pixels". This suggested it was a visual (or visual-type) solution, which brought me back to my favorite stego tool, [StegOnline](https://stegonline.georgeom.net/). Browsing the bit planes, there was unique data on Green 0, Blue 0, and Blue 1. You could see that there was a single column of pixels changing along the far right side. I extracted the data along the columns and examined the resulting data in a hex editor. 
 
+[flag.dat](flag.dat)
 
+![Bit Plane Extraction](StegOnline.PNG)
+![Hex Editor View](Hexview.PNG)
 
+The flag was at the very end of the hex file since it was the last column the program inspected.
 
 ### Flag
 ```
-TBD
+GLUG{t00_many_p1x3l5}
 ```
