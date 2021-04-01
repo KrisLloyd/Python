@@ -44,21 +44,28 @@ foremost -i sdcard
 I loaded some images into [StegOnline](https://stegonline.georgeom.net/) and did some initial browsing of the colour planes and the bit planes. From the few files I looked at, there was no hidden information that was visible. 
 
 The challenge creator released a hint by editing the challenge hint: 
-**L**esly accidently deleted her photos from camera. 
-**S**he gave you the camera to figure it out. 
-**B**TW, Lesly is Marvel fan.
 
-This hints that the flag is hiden in the LSB of the file(s).
+<pre>
+<b>L</b>esly accidently deleted her photos from camera. 
+<b>S</b>he gave you the camera to figure it out. 
+<b>B</b>TW, Lesly is Marvel fan.
+</pre>
 
-- Side note - 
+This hints that the flag is hiden in the LSB of the file(s). Using [an online stego decoder](https://futureboy.us/stegano/decinput.html) I looked at the JPG files and discovered that they contained hidden text files. All files except **00015874.jpg** contained the same file with the same content
 
-Exploring the challenge creators GitHub, I also discovered a CTF repository that contained a 'Stego' folder with a single image.
+```
+notsecret.xtx
 
-![Marvel](Marvel.jpg)
+Maybe this is what you want: GLUG{#####wrong_file#####}
+```
 
-It may or may not be related, and this is most likely not the intended path, however I cannot discount the reference to Marvel in the provided clue. 
+00015874.jpg - [nososecret](nososecret.txt)
+```
+Maybe "this" is what you want: GLUG{####################}
+```
 
-More investigation needs to be done for this solve.
+My next move is to perform a LSB decode on the PNG file.
+
 
 ### Flag
 ```
