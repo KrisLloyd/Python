@@ -1,3 +1,6 @@
+[< Back to All CTFs](https://github.com/KrisLloyd/Python/tree/master/CTF#ctf-solves)
+***
+
 # From Japan with Love
 
 ![From Japan with Love Challenge](Japan.PNG)
