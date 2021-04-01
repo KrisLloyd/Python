@@ -10,7 +10,7 @@ TDB
 
 # Examples
 
-* Area of a circle with radius of 5m:
+* TBD:
 
   ```
   TBD
