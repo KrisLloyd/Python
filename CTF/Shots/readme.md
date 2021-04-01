@@ -22,6 +22,10 @@ There is an article [Restoring Deleted Files in Linux from the ext3 Journal](htt
 Returning to the **sdcard** file, I was able to use the **formost** program in Kali to recover lost some files. The program was able to recover 2 folders **jpg** and **png**, inside I found the following:
 
 ```
+foremost -i sdcard
+```
+
+```
 /jpg
 - 00002730.jpg
 - 00003136.jpg
