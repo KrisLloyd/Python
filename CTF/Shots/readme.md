@@ -19,6 +19,29 @@ Opening the Journal file in a hex editor showed that the file has the signiture 
 
 There is an article [Restoring Deleted Files in Linux from the ext3 Journal](https://spin.atomicobject.com/2012/06/29/restoring-deleted-files-from-the-ext3-journal/) that outlines the process to recover deleted files. I will attempt this strategy next.
 
+Returning to the **sdcard** file, I was able to use the **formost** program in Kali to recover lost some files. The program was able to recover 2 folders **jpg** and **png**, inside I found the following:
+
+```
+/jpg
+- 00002730.jpg
+- 00003136.jpg
+- 00003280.jpg
+- 00003650.jpg
+- 00004728.jpg
+- 00012290.jpg
+- 00014338.jpg
+- 00015048.jpg
+- 00015874.jpg
+
+/png
+- 000048323.png
+```
+
+I loaded some images into [StegOnline](https://stegonline.georgeom.net/) and did some initial browsing of the colour planes and the bit planes. From the few files I looked at, there was no hidden information that was visible. 
+
+My new working theory is the filenames.
+
+
 
 - Side note - 
 
