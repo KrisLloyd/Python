@@ -29,11 +29,20 @@ The clue references the tabletop game **Go** where colours are flipped (though I
 
 ![Inverted QR ](TestFlip.png)
 
-Sadly this didn't yield any results.
+Sadly this didn't yield any results. Time to dig deeper, upnext is zsteg and foremost.
+
+```bash
+┌──(kali㉿kali)-[~/Japan]
+└─$ zsteg flag.png     
+[=] nothing :( 
+```
+
+Both tools came up empty.
+
+
+
 
 ### Flag
 ```
-GLUG{S33ms_l1k3_th3_wr0n9_fl49} <--- Red Herring!
-
 TBD
 ```
