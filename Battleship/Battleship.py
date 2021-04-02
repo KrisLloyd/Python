@@ -1,73 +1,103 @@
-#Imports
+# Imports
 from random import randint
 import os
-board = []
 
-#Function declarations
-for x in range(5):
-  board.append(["O"] * 5)
-
-def print_board(board):
-  for row in board:
-    print " ".join(row)
+# Functions
+def print_board(board, turn):
+    os.system('cls' if os.name=='nt' else 'clear')
+    print(" Battleship! ".center(22, "-"))
+    print("----------------------")
+    newline()
+    print("      1  2  3  4  5")
+    print("     ---------------")
+    for row in range(len(board)):
+        print("  {} | ".format(row + 1) + "  ".join(board[row]))
+    newline()
+    print("Turn {}".format(turn + 1))
+    newline()
 
 def random_row(board):
-  return randint(0, len(board) - 1)
+    return randint(0, len(board) - 1)
 
 def random_col(board):
-  return randint(0, len(board[0]) - 1)
+    return randint(0, len(board[0]) - 1)
 
-#System variables
-ship_row = random_row(board)
-ship_col = random_col(board)
-while (True):
-    ship2_row = random_row(board)
-    ship2_col = random_col(board)
-    if ship2_row != ship_row and ship2_col != ship_col:
+def getNum(s):
+  while True:
+      num = input(s)
+      if num.lower() == 'x':
+        return -1
+      if num.isnumeric() and int(num) in range(1,6):
+        num = int(num)
         break
-ships = 2
+  return num - 1
 
-#Game play
-for turn in range(8):
-  os.system('cls' if os.name=='nt' else 'clear')
-  print "Welcome to Battleship!"
-  print "----------------------------"
-  print
-  print_board(board)
-  print
-  print "Turn ", turn + 1
-  print
-  while (True):
-      guess_row = int(raw_input("Enter a Row: "))
-      if guess_row in range(10):
-          break
-  while (True):
-      guess_col = int(raw_input("Enter a Col: "))
-      if guess_col in range(10):
-          break
+def newline():
+    print()
 
-  if (guess_row == ship_row and guess_col == ship_col) or (guess_row == ship2_row and guess_col == ship2_col):
-    print "Congratulations! You sunk my battleship!"
-    if guess_row == ship_row and guess_col == ship_col:
-        board[guess_row][guess_col] = "H"
-        ships -= 1
+# Initial Setup
+def setup():
+    board = []
+    ships = []
+    for x in range(5):
+        board.append(["O"] * 5)
+    ship_row = random_row(board)
+    ship_col = random_col(board)
+    ships.append([ship_row, ship_col])
+
+    while True:
+        ship2_row = random_row(board)
+        ship2_col = random_col(board)
+        if ship2_row != ship_row and ship2_col != ship_col:
+            ships.append([ship2_row, ship2_col])
+            break
+    return board, ships
+
+# Game play
+def play():
+    board, ships = setup()
+    for turn in range(8):
+      while True:
+          print_board(board, turn)
+          guess_row = getNum("Enter a Row: ")
+          if guess_row == -1:
+              return False
+          guess_col = getNum("Enter a Col: ")
+          if guess_col == -1:
+              return False
+          if board[guess_row][guess_col] == "O":
+              break
+          input("You've already tried these coordinates. (Press any key to try again)")
+
+      if [guess_row, guess_col] in ships:
+          ships.remove([guess_row, guess_col])
+          board[guess_row][guess_col] = "H"
+          print_board(board, turn)
+          input("\nYou sunk my battleship!\n(Press any key to continue)")
+          if len(ships) <= 0:
+              newline()
+              break
+      else:
+          board[guess_row][guess_col] = "X"
+          print_board(board, turn)
+          input("\nMissed!\n(Press any key to continue)")
+
+    # End of Game
+    if len(ships) > 0:
+        print("Game over!")
+        print("There were still {} ships left.".format(len(ships)))
+        for i in range(len(ships)):
+            print("Remaining ship #{} was at x: {} and y: {}".format(i + 1, ships[i][0] + 1, ships[i][1] + 1))
     else:
-        board[guess_row][guess_col] = "H"
-        ships -= 1
-    if ships == 0:
-        break
-  else:
-    if guess_row not in range(5) or guess_col not in range(5):
-      print "Oops, that's not even in the ocean."
-    elif(board[guess_row][guess_col] == "X"):
-      print "You guessed that one already."
-      turn - 1
+        print("Congratulations, you won!")
+    option = input("Play again? ('y' to play again, any other input for 'n'): ")
+    if option.lower() == 'y':
+        return True
     else:
-      print "You missed!"
-      board[guess_row][guess_col] = "X"
-    if turn == 7:
-      print "Game Over"
-      print "Ship 1: [" + str(ship_row) + ", " + str(ship_col) + "]"
-      print "Ship 2: [" + str(ship2_row) + ", " + str(ship2_col) + "]"
-      break
-  raw_input()
+        return False
+
+if __name__ == "__main__":
+    x = True
+    while x:
+        x = play()
+    print("Thanks for playing!")
