@@ -17,14 +17,18 @@ Various random snippits and project in Python.
 
   View, add, remove, edit calendar events.
  
-* <a href="https://github.com/KrisLloyd/Scripts" target="_blank">Madlib Game</a>
+* <a href="https://github.com/KrisLloyd/Python/tree/master/Madlib#about" target="_blank">Madlib Game</a>
 
   This program is designed to be a MadLibs game. Users are prompted for input, which will then be substituted into blank spaces in a provided story, then print the resultsa for the user to read.
   
-* <a href="https://github.com/KrisLloyd/Python/tree/master/Calendar#about" target="_blank">Number Game</a>
+* <a href="https://github.com/KrisLloyd/Python/tree/master/NumberGuess#about" target="_blank">Number Game</a>
 
   This program asks the user to roll virtual dice, then guess the outcome. If the guess is correct, the user wins, otherwise the computer wins.
   
+* <a href="https://github.com/KrisLloyd/Python/tree/master/RPS#about" target="_blank">Rock Paper Scissor Game</a>
+
+  Standard Rock Paper Scissor game.
   
-  
-  
+* <a href="https://github.com/KrisLloyd/Python/tree/master/Telnet%20Server#about" target="_blank">Telnet Server and Client</a>
+
+  Python telnet server and client. 
