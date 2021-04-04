@@ -5,17 +5,27 @@
 Various random snippits and project in Python.
 
 # Projects
+
+### Utilities
+
 * <a href="https://github.com/KrisLloyd/Python/tree/master/AreaCalculator#about" target="_blank">Area Calculator</a>
 
   Program that prompts the user for a type of shape and values and returns the area of that shape.
   
-* <a href="https://github.com/KrisLloyd/Python/tree/master/Battleship#about" target="_blank">Battleship</a>
-
-  Simple Battleship style game
- 
 * <a href="https://github.com/KrisLloyd/Python/tree/master/Calendar#about" target="_blank">Calendar Program</a>
 
   View, add, remove, edit calendar events.
+
+* <a href="https://github.com/KrisLloyd/Python/tree/master/Telnet%20Server#about" target="_blank">Telnet Server and Client</a>
+
+  Python telnet server and client. 
+
+
+### Games
+
+* <a href="https://github.com/KrisLloyd/Python/tree/master/Battleship#about" target="_blank">Battleship</a>
+
+  Simple Battleship style game
  
 * <a href="https://github.com/KrisLloyd/Python/tree/master/Madlib#about" target="_blank">Madlib Game</a>
 
@@ -28,7 +38,3 @@ Various random snippits and project in Python.
 * <a href="https://github.com/KrisLloyd/Python/tree/master/RPS#about" target="_blank">Rock Paper Scissor Game</a>
 
   Standard Rock Paper Scissor game.
-  
-* <a href="https://github.com/KrisLloyd/Python/tree/master/Telnet%20Server#about" target="_blank">Telnet Server and Client</a>
-
-  Python telnet server and client. 
