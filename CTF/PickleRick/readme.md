@@ -123,15 +123,17 @@ Thankfully there's more than one way to read strings, by using **strings**! That
 ```bash
 mr. meeseek hair
 ```
+
+```
 (clue.txt)
-```bash
 Look around the file system for the other ingredient.
 ```
 
 Ok, where else could data be hidden. **whoami** shows that I'm a non-user account **www-data**. Since this is Rick's computer, he must have an account, lets see if there is anything on his account. In the home directory of the **rick** user, there is a file called **second ingredients**, using the same **strings** method as the first ingredient provided the second:
 
-(/home/rick/"second ingredient")
+
 ```bash
+(/home/rick/"second ingredient")
 1 jerry tear
 ```
 
@@ -145,6 +147,7 @@ snap
 Paydirt! lets see what it says:
 
 ```bash
+(3rd.txt)
 3rd ingredients: fleeb juice
 ```
 
@@ -153,15 +156,15 @@ Paydirt! lets see what it says:
 
 ### Flag
 
-First ingredient:
+**First ingredient:**
 ```
 mr. meeseek hair
 ```
-Second ingredient:
+**Second ingredient:**
 ```
 1 jerry tear
 ```
-Third ingredient:
+**Third ingredient:**
 ```
 3rd ingredients: fleeb juice
 ```
