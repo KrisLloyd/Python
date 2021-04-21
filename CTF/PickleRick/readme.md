@@ -166,5 +166,5 @@ mr. meeseek hair
 ```
 **Third ingredient:**
 ```
-3rd ingredients: fleeb juice
+fleeb juice
 ```
