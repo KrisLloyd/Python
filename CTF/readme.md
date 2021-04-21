@@ -44,3 +44,8 @@
 #### [ Forensics/Steg ]
 * [Shots](./Shots)
 * [Render](./Render)
+
+
+### AE CTF - TryHackMe (March 2020)
+![Results](AE_CTF_Results.png)
+* [Pickle Rick](./PickleRick)
