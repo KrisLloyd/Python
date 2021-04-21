@@ -1,7 +1,25 @@
-placeholder
+[< Back to All CTFs](https://github.com/KrisLloyd/Python/tree/master/CTF#ctf-solves)
+
+[< Back to AE CTF](https://github.com/KrisLloyd/Python/tree/master/CTF#ae-ctf---tryhackme-april-2021)
+***
+
+# Pickle Rick
+
+![Exfil Challenge](PickleRick.PNG)
+
+### Challenge:
+##### This Rick and Morty themed challenge requires you to exploit a webserver to find 3 ingredients that will help Rick make his potion to transform himself back into a human from a pickle.
+##### 90 Points Total, 30 per question
+
+### Solve:
 
 
-<pre>
+
+![pcap Inspection](Exfil_pcap.PNG)
+
+
+
+```bash
 root@ip-10-10-150-158:~# gobuster dir -u http://10.10.117.3 -w /root/Desktop/Tools/wordlists/dirb/common.txt 
 ===============================================================
 Gobuster v3.0.1
@@ -26,5 +44,12 @@ by OJ Reeves (@TheColonial) & Christian Mehlmauer (@_FireFart_)
 ===============================================================
 2021/04/21 15:19:50 Finished
 ===============================================================
+```
 
-</pre>
+
+### Flag
+```
+flag{not_so_stealthy_exfil}
+```
+
+
