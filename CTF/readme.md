@@ -47,5 +47,5 @@
 
 
 ### AE CTF - TryHackMe (March 2020)
-![Results](AE_CTF_Results.png)
+![Results](AE_CTF_Results.PNG)
 * [Pickle Rick](./PickleRick)
