@@ -87,7 +87,7 @@ def emptyList(listType):
         op = input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET))
         if op.lower() == 'y':
             getTopology(False)
-            if len(hosts) < 1:
+            if len(globals()[listType]) < 1:
                 print("[{YELLOW}*{RESET}] Warning: Topology does not contain {type}. Try generating some traffic or verifying the topology.".format(YELLOW = YELLOW, RESET = RESET, type = listType))
                 newline()
                 x = input("Press any key to return to the menu options...")
