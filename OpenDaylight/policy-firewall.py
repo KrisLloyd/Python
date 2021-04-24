@@ -90,7 +90,7 @@ def emptyList(listType):
             if len(globals()[listType]) < 1:
                 print("[{YELLOW}*{RESET}] Warning: Topology does not contain {type}. Try generating some traffic or verifying the topology.".format(YELLOW = YELLOW, RESET = RESET, type = listType))
                 newline()
-                x = input("Press any key to return to the menu options...")
+                x = input("Press any key to return to the main menu...")
                 return False
             break
         if op.lower() == 'x' or op.lower() == 'n':
@@ -146,7 +146,7 @@ def getTopology(s):
     print("[{GREEN}*{RESET}] Topology has been loaded.".format(GREEN = GREEN, RESET = RESET))
     if s:
         newline()
-        x = input("Press any key to return to the menu options...")
+        x = input("Press any key to return to the main menu...")
         return
 
 
@@ -161,13 +161,20 @@ def getHosts(s):
         if emptyList('hosts') == False:
             return
 
+    newline(2)
+    print("[{GREEN}*{RESET}] Gathering info.".format(GREEN = GREEN, RESET = RESET))
+    time.sleep(0.2)
+    newline(2)
+    print("\tHost ID:\t\t\tIP Address:\tMAC Address:\t\tStatus:")
+    print("\t----------\t\t\t-----------\t------------\t\t-------")
     for i in hosts:
-        print(i)
+        print("\t{HOST}\t\t{IP}\t{MAC}\t{GREEN}Active{RESET}".format(HOST = i.getName(), IP = i.getIP(), MAC = i.getMAC(), GREEN = GREEN, RESET = RESET))
+    newline()
 
     if s:
         return
     newline()
-    x = input("Press any key to return to the menu options...")
+    x = input("Press any key to return to the main menu ...")
 
 
 def getSwitches(s):
@@ -192,7 +199,7 @@ def getSwitches(s):
     if s:
         return
     newline()
-    x = input("Press any key to return to the menu options...")
+    x = input("Press any key to return to the main menu...")
 
 
 # Classes
@@ -208,7 +215,7 @@ class host():
     def getName(self):
         return self.name
 
-    def getIP(sefl):
+    def getIP(self):
         return self.ip
 
     def getMAC(self):
@@ -274,7 +281,7 @@ try:
                     r = requests.get('http://192.168.248.128:8181/restconf/operational/opendaylight-inventory:nodes/node/{}/flow-node-inventory:table/0/opendaylight-flow-table-statistics:flow-table-statistics'.format(switch.name), auth=('admin', 'admin'))
                     print('Switch: {}\n\tActive Flows: {}\n\tPackets-Looked-Up: {}\n\tPackets Matched: {}'.format(switch.name, r.json()['opendaylight-flow-table-statistics:flow-table-statistics']['active-flows'], r.json()['opendaylight-flow-table-statistics:flow-table-statistics']['packets-looked-up'], r.json()['opendaylight-flow-table-statistics:flow-table-statistics']['packets-matched']))
                     x = input()
-                x = input("\nPress any key to return to the menu options...")
+                x = input("\nPress any key to return to the main menu...")
             elif op.lower() == 's':
                 print("\n")
                 for i in range(len(switches)):
@@ -298,7 +305,7 @@ try:
                 newline()
                 r = requests.get('http://192.168.248.128:8181/restconf/operational/opendaylight-inventory:nodes/node/{}/flow-node-inventory:table/0/opendaylight-flow-table-statistics:flow-table-statistics'.format(switches[int(op)].name), auth=('admin', 'admin'))
                 print('Switch: {}\n\tActive Flows: {}\n\tPackets-Looked-Up: {}\n\tPackets Matched'.format(switches[int(op)].name, r.json()['opendaylight-flow-table-statistics:flow-table-statistics']['active-flows'], r.json()['opendaylight-flow-table-statistics:flow-table-statistics']['packets-looked-up'], r.json()['opendaylight-flow-table-statistics:flow-table-statistics']['packets-matched']))
-                x = input("\nPress any key to return to the menu options...")
+                x = input("\nPress any key to return to the main menu...")
             else:
                 continue
 
@@ -310,7 +317,7 @@ try:
             print("\nThis feature would make an API request to the ODL controller that would resemble the following:")
             print("POST http://192.168.248.128:8181/restconf/config/opendaylight-flow-table-statistics:get-flow-tables-statistics")
             print("\n\nThe resules would be in JSON format, and would be parsed for relevant data.")
-            x = input("\nPress any key to return to the menu options...")
+            x = input("\nPress any key to return to the main menu...")
 
         # Enf of Loop
         os.system('cls')
