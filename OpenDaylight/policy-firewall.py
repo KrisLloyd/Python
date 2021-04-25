@@ -4,6 +4,7 @@ from pprint import pprint
 import os
 import time
 import sys
+import re
 
 
 # r = requests.put()
@@ -20,6 +21,7 @@ PURPLE = "\u001B[35m"
 RESET = "\u001b[0m"
 hosts = []
 switches = []
+flows = {}
 state = '0'
 
 # Assets
@@ -110,7 +112,7 @@ def menu():
     print("[2] Show Known Hosts")
     print("[3] Show known Switches")
     print("[4] Show Flow Statistics")
-    print("[5] Modify A Flow")
+    print("[5] Add/Modify A Flow")
     print("[9] Exit")
 
 
@@ -119,7 +121,7 @@ def getTopology(s):
     print("[{GREEN}*{RESET}] Requesting topology from controller.".format(GREEN = GREEN, RESET = RESET))
     time.sleep(0.5)
     response = requests.get('http://192.168.248.128:8181/restconf/operational/network-topology:network-topology', auth=('admin', 'admin'))
-    if response != None:
+    if response:
         print("[{GREEN}*{RESET}] Request sucessful.".format(GREEN = GREEN, RESET = RESET))
     else:
         print("[{RED}*{RESET}] Request failed.".format(RED = RED, RESET = RESET))
@@ -142,6 +144,16 @@ def getTopology(s):
                     isNew = False
             if isNew:
                 switches.append(switch(i['node-id']))
+
+    # Sort Hosts
+    hosts.sort(key=lambda x: x.getName())
+    # Sort Switches
+    switches.sort(key=lambda x: x.getName())
+    # Add Switches flows dictionary
+    for i in switches:
+        if i.getName() not in flows:
+            flows[i.getName()] = []
+
 
     print("[{GREEN}*{RESET}] Topology has been loaded.".format(GREEN = GREEN, RESET = RESET))
     if s:
@@ -201,6 +213,427 @@ def getSwitches(s):
     newline()
     x = input("Press any key to return to the main menu...")
 
+
+def getFlows():
+    while True:
+        os.system('cls' if os.name=='nt' else 'clear')
+        print("=".center(105, "="))
+        print(" Flows ".center(105, "-"))
+        print("=".center(105, "="))
+        newline(2)
+
+        print("[1] Show All Flows")
+        print("[2] Add A Flow")
+        print("[3] Modify A Flow")
+        print("[4] Delete A Flow")
+        print("[9] Return To Main Menu")
+        newline()
+        print("What would you like to do?")
+        while True:
+            state = input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET))
+            if state == "":
+                continue
+            else:
+                break
+
+        newline()
+        # Show all flows
+        if state == '1':
+            print("[{GREEN}*{RESET}] Gathering info.".format(GREEN = GREEN, RESET = RESET))
+            time.sleep(0.2)
+            if len(switches) < 1:
+                if emptyList('switches') == False:
+                    return
+            print("----- All Flows: -----".center(105, " "))
+            newline()
+            for switch in switches:
+                response = requests.get('http://192.168.248.128:8181/restconf/operational/opendaylight-inventory:nodes/node/{SWITCH}/table/0'.format(SWITCH = switch.getName()), auth=('admin', 'admin'))
+                data = response.json()
+                newline()
+                flows[switch.getName()] = []
+                print("\tSwitch ID: {SWITCH}".format(SWITCH = switch.getName()))
+                for j in range(len(data['flow-node-inventory:table'][0]['flow'])):
+                    if data['flow-node-inventory:table'][0]['flow'][j]['id'][0] != 'L' and data['flow-node-inventory:table'][0]['flow'][j]['id'][0] != '#':
+                        flows[switch.getName()].append(data['flow-node-inventory:table'][0]['flow'][j]['id'])
+                if len(flows[switch.getName()]) > 0:
+                    for i in range(len(flows[switch.getName()])):
+                        print("\t\tFlow ID: {ID}".format(ID = flows[switch.getName()][i]))
+                else:
+                    print("\t\t{YELLOW}NOTICE{RESET} - No flows have been applied to this device.".format(YELLOW = YELLOW, RESET = RESET))
+
+            newline()
+            print("[{GREEN}*{RESET}] Complete.".format(GREEN = GREEN, RESET = RESET))
+            input("Press any key to return to the Flows menu...")
+
+        # Add flow rule
+        if state == '2':
+            os.system('cls' if os.name=='nt' else 'clear')
+            if len(switches) < 1:
+                if emptyList('switches') == False:
+                    return
+            if len(hosts) < 1:
+                if emptyList('hosts') == False:
+                    return
+            print("----- Add A Flow: -----".center(105, " "))
+            newline()
+            print("\tSelect the souce(s):")
+            newline()
+            print("\tSelection\tHost ID:\t\t\tIP Address:\tMAC Address:\t\tSRC: DST:")
+            print("\t---------\t--------\t\t\t-----------\t------------\t\t---- ----")
+            for i in range(len(hosts)):
+                print("\t[{i}]\t\t{HOST}\t\t{IP}\t{MAC}".format(i = i + 1, HOST = hosts[i].getName(), IP = hosts[i].getIP(), MAC = hosts[i].getMAC()))
+
+            newline(2)
+            print("\tSeparate multiple hosts with a space.")
+            print("\tExample:")
+            print("\t\t{GREEN}>>>{RESET} 1 3 5".format(GREEN = GREEN, RESET = RESET))
+            newline()
+
+            # This section needs input validation. To do at a later time. -------
+            sources = list(map(int, input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET)).split()))
+            # --------------------------------------------------------------------
+
+            os.system('cls' if os.name=='nt' else 'clear')
+            print("----- Add A Flow: -----".center(105, " "))
+            newline()
+            print("\tSelect the destination(s):")
+            newline()
+            print("\tSelection\tHost ID:\t\t\tIP Address:\tMAC Address:\t\tSRC: DST:")
+            print("\t---------\t--------\t\t\t-----------\t------------\t\t---- ----")
+            for i in range(len(hosts)):
+                m = "\t[{i}]\t\t{HOST}\t\t{IP}\t{MAC}"
+                if i + 1 in sources:
+                    m += "\t {RED}*{RESET}"
+                print(m.format(i = i + 1, HOST = hosts[i].getName(), IP = hosts[i].getIP(), MAC = hosts[i].getMAC(), RED = RED, RESET = RESET))
+
+            newline(2)
+            print("\tSeparate multiple hosts with a space.")
+            print("\tExample:")
+            print("\t\t{GREEN}>>>{RESET} 1 3 5".format(GREEN = GREEN, RESET = RESET))
+            newline()
+
+            # This section needs input validation. To do at a later time. -------
+            destinations = list(map(int, input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET)).split()))
+            # --------------------------------------------------------------------
+
+            os.system('cls' if os.name=='nt' else 'clear')
+            print("----- Add A Flow: -----".center(105, " "))
+            newline()
+            print("\tSelect the match criteria:")
+            newline()
+            print("\tSelection\tHost ID:\t\t\tIP Address:\tMAC Address:\t\tSRC: DST:")
+            print("\t---------\t--------\t\t\t-----------\t------------\t\t---- ----")
+            for i in range(len(hosts)):
+                m = "\t[{i}]\t\t{HOST}\t\t{IP}\t{MAC}"
+                if i + 1 in sources:
+                    m += "\t {RED}*{RESET}"
+                    if i + 1 in destinations:
+                        m += "    {RED}*{RESET}"
+                elif i + 1 in destinations:
+                    m += "\t      {RED}*{RESET}"
+
+                print(m.format(i = i + 1, HOST = hosts[i].getName(), IP = hosts[i].getIP(), MAC = hosts[i].getMAC(), RED = RED, RESET = RESET))
+            newline(2)
+
+            print("\tOptions - IP, MAC, PROTOCOL")
+            print("\tExample:")
+            print("\t\t{GREEN}>>>{RESET} MAC".format(GREEN = GREEN, RESET = RESET))
+            newline()
+            match = input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET))
+            newline(2)
+            print("\tSelect the switch(es) to apply the flow rule:")
+            newline()
+            print("\tSelection:\tSwitch:")
+            print("\t----------\t-------")
+            for i in range(len(switches)):
+                print("\t[{i}]\t{SWITCH}".format(i = i + 1, SWITCH = switches[i].getName()))
+
+            newline(2)
+            print("\tSeparate multiple hosts with a space.")
+            print("\tExample:")
+            print("\t\t{GREEN}>>>{RESET} 4 6".format(GREEN = GREEN, RESET = RESET))
+            newline()
+
+            # This section needs input validation. To do at a later time. -------
+            targets = list(map(int, input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET)).split()))
+            # --------------------------------------------------------------------
+
+            os.system('cls' if os.name=='nt' else 'clear')
+            print("----- Add A Flow: -----".center(105, " "))
+            newline()
+            print("\tConfirm the following selections:")
+            newline()
+            print("\tSource:")
+            for i in range(len(sources)):
+                print("\t\tName: {}".format(hosts[sources[i] - 1].getName()))
+                print("\t\tIP: {}".format(hosts[sources[i] - 1].getIP()))
+                print("\t\tMAC: {}".format(hosts[sources[i] - 1].getMAC()))
+            newline()
+            print("\tDestination:")
+            for i in range(len(destinations)):
+                print("\t\tName: {}".format(hosts[destinations[i] - 1].getName()))
+                print("\t\tIP: {}".format(hosts[destinations[i] - 1].getIP()))
+                print("\t\tMAC: {}".format(hosts[destinations[i] - 1].getMAC()))
+            newline()
+            print("\tMatch:")
+            print("\t\t{MATCH}".format(MATCH = match))
+            newline()
+            print("\tTargets:")
+            for i in range(len(targets)):
+                print("\t\t{}".format(switches[targets[i] - 1].getName()))
+
+            newline(2)
+            print("\tIs this information correct?")
+            newline()
+            # This section needs input validation. To do at a later time. -------
+            confirm = input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET))
+            # --------------------------------------------------------------------
+
+
+            if confirm == 'y':
+                newline()
+                print("[{GREEN}*{RESET}] Flow data confirmed.".format(GREEN = GREEN, RESET = RESET))
+                print("[{GREEN}*{RESET}] Sending flow request to controller.".format(GREEN = GREEN, RESET = RESET))
+
+                for i in range(len(targets)):
+                    for j in range(len(sources)):
+                        for k in range(len(destinations)):
+                            flowid = 'h' + hosts[sources[j] - 1].getName()[-1] + 'h' + hosts[destinations[k] - 1].getName()[-1] + 's' + switches[targets[i] - 1].getName()[-1] + '-' + match[:3]
+                            xml = """<?xml version="1.0"?>
+<flow xmlns="urn:opendaylight:flow:inventory">
+  <priority>1000</priority>
+  <flow-name>{FLOWID}</flow-name>
+  <match>
+    <ethernet-match>
+      <ethernet-type>
+        <type>2048</type>
+      </ethernet-type>
+    </ethernet-match>
+    <ipv4-source>{SRC}/32</ipv4-source>
+    <ipv4-destination>{DST}/32</ipv4-destination>
+  </match>
+  <id>{FLOWID}</id>
+  <table_id>0</table_id>
+  <instructions>
+    <instruction>
+      <order>0</order>
+      <apply-actions>
+        <action>
+          <order>0</order>
+          <drop-action/>
+        </action>
+      </apply-actions>
+    </instruction>
+  </instructions>
+</flow>""".format(FLOWID = flowid, SRC = hosts[sources[j] - 1].getIP(), DST = hosts[destinations[k] - 1].getIP())
+                            headers = {'Content-Type': 'application/xml'}
+                            uri = 'http://192.168.248.128:8181/restconf/config/opendaylight-inventory:nodes/node/{SWITCH}/table/0/flow/{NAME}'.format(SWITCH = switches[targets[0] - 1].getName(), NAME = flowid)
+                            request = requests.put(uri, data=xml, headers=headers, auth=('admin', 'admin'))
+
+                            if request:
+                                print("[{GREEN}*{RESET}] FlowID {FLOWID} added sucessfully.".format(GREEN = GREEN, RESET = RESET, FLOWID = flowid))
+                            else:
+                                print("[{RED}*{RESET}] Error applying flow {FLOWID}.".format(RED = RED, RESET = RESET, FLOWID = flowid))
+                                print("[{RED}*{RESET}] Error: {REQUEST}".format(RED = RED, RESET = RESET, REQUEST = request))
+                print("[{GREEN}*{RESET}] Complete.".format(GREEN = GREEN, RESET = RESET, FLOWID = flowid))
+                input('Press any key to return to the Flows menu...')
+            else:
+                print("[{RED}*{RESET}] Aborting.".format(RED = RED, RESET = RESET))
+                input('Press any key to return to the Flows menu...')
+
+        # Modify existing rule
+        if state == '3':
+            newline()
+            if len(switches) < 1:
+                if emptyList('switches') == False:
+                    return
+            print("----- All Flows: -----".center(105, " "))
+            newline()
+            for switch in switches:
+                response = requests.get('http://192.168.248.128:8181/restconf/operational/opendaylight-inventory:nodes/node/{SWITCH}/table/0'.format(SWITCH = switch.getName()), auth=('admin', 'admin'))
+                data = response.json()
+                newline()
+                flows[switch.getName()] = []
+                print("\tSwitch ID: {SWITCH}".format(SWITCH = switch.getName()))
+                for j in range(len(data['flow-node-inventory:table'][0]['flow'])):
+                    if data['flow-node-inventory:table'][0]['flow'][j]['id'][0] != 'L' and data['flow-node-inventory:table'][0]['flow'][j]['id'][0] != '#':
+                        flows[switch.getName()].append(data['flow-node-inventory:table'][0]['flow'][j]['id'])
+                if len(flows[switch.getName()]) > 0:
+                    for i in range(len(flows[switch.getName()])):
+                        print("\t\tFlow ID: {ID}".format(ID = flows[switch.getName()][i]))
+                else:
+                    print("\t\t{YELLOW}NOTICE{RESET} - No flows have been applied to this device.".format(YELLOW = YELLOW, RESET = RESET))
+
+            newline(2)
+            print("\tWhich flow would you like to modify?")
+            newline()
+            mod = input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET))
+            if mod in flows[switches[int(mod[5]) - 1].getName()]:
+                # Flow IO found
+                newline()
+                print("[{GREEN}*{RESET}] Requesting Flow ID {FLOWID} details from controller.".format(GREEN = GREEN, RESET = RESET, FLOWID = mod))
+                response = requests.get('http://192.168.248.128:8181/restconf/operational/opendaylight-inventory:nodes/node/openflow:4/table/0/flow/{FLOWID}'.format(FLOWID = mod), auth=('admin', 'admin'))
+                if response:
+                    print("[{GREEN}*{RESET}] Request sucessful.".format(GREEN = GREEN, RESET = RESET))
+                else:
+                    newline()
+                    print("[{RED}*{RESET}] Request failed.".format(RED = RED, RESET = RESET))
+                    print("[{RED}*{RESET}] Error {ERROR}.".format(RED = RED, RESET = RESET, ERROR = response))
+                    newline()
+                    input("Press any key to return to the Flows menu...")
+
+                data = response.json()
+                newline(2)
+                r = r"[a-z0-9]*-([a-zA-Z]{2,3})"
+                src = data['flow-node-inventory:flow'][0]['match']['ipv4-source'].strip('/32')
+                dst = data['flow-node-inventory:flow'][0]['match']['ipv4-destination'].strip('/32')
+                type = re.search(r, mod)[1]
+                tar = switches[int(mod[5]) - 1].getName()
+
+                print('\tFlow ID: {FLOWID}'.format(FLOWID = mod))
+                print("\t-------------------")
+                print("\t[1] Source: {SRC}".format(SRC = src))
+                print("\t[2] Destination: {DST}".format(DST = dst))
+                print("\t[3] Match Type: {MAT}".format(MAT = type))
+                print("\t[4] Switch: {SWITCH}".format(SWITCH = tar))
+
+                newline(2)
+                print("What would you like to change?")
+                change = input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET))
+
+                if change == '1':
+                    newline(2)
+                    print("What is the new source address?")
+                    src = input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET))
+                if change == '2':
+                    newline(2)
+                    print("What is the new destination address?")
+                    dst = input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET))
+                if change == '3':
+                    newline(2)
+                    print("What is the new match type?")
+                    type = input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET))
+                    print("What is the new source address?")
+                    src = input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET))
+                    print("What is the new destination address?")
+                    dst = input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET))
+                if change == '4':
+                    newline(2)
+                    print("What is the new switch?")
+                    tar = input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET))
+
+                print("[{GREEN}*{RESET}] Updating request.".format(GREEN = GREEN, RESET = RESET))
+
+                print('DEBUG')
+                print(src)
+                print(dst)
+                print(tar)
+                print(type)
+                flowid = 'h' + src[-1] + 'h' + dst[-1] + 's' + tar[-1] + '-' + type[:3]
+                print(flowid)
+                print('DEBUG END')
+
+                flowid = 'h' + src[-1] + 'h' + dst[-1] + 's' + tar[-1] + '-' + type[:3]
+                xml = """<?xml version="1.0"?>
+<flow xmlns="urn:opendaylight:flow:inventory">
+  <priority>1000</priority>
+  <flow-name>{FLOWID}</flow-name>
+  <match>
+    <ethernet-match>
+      <ethernet-type>
+        <type>2048</type>
+      </ethernet-type>
+    </ethernet-match>
+    <ipv4-source>{SRC}/32</ipv4-source>
+    <ipv4-destination>{DST}/32</ipv4-destination>
+  </match>
+  <id>{FLOWID}</id>
+  <table_id>0</table_id>
+  <instructions>
+    <instruction>
+      <order>0</order>
+      <apply-actions>
+        <action>
+          <order>0</order>
+          <drop-action/>
+        </action>
+      </apply-actions>
+    </instruction>
+  </instructions>
+</flow>""".format(FLOWID = flowid, SRC = src, DST = dst)
+                headers = {'Content-Type': 'application/xml'}
+
+                # Delete old request
+                uriDel = 'http://192.168.248.128:8181/restconf/config/opendaylight-inventory:nodes/node/{SWITCH}/table/0/flow/{NAME}'.format(SWITCH = tar, NAME = mod)
+                requestDel = requests.delete(uri, headers=headers, auth=('admin', 'admin'))
+                if requestDel:
+                    print("[{GREEN}*{RESET}] FlowID {FLOWID} removed.".format(GREEN = GREEN, RESET = RESET, FLOWID = mod))
+                else:
+                    print("[{RED}*{RESET}] Error removing flowID {FLOWID}.".format(RED = RED, RESET = RESET, FLOWID = mod))
+                    print("[{RED}*{RESET}] Error: {REQUEST}".format(RED = RED, RESET = RESET, REQUEST = request))
+
+                # Add new request
+                uriNew = 'http://192.168.248.128:8181/restconf/config/opendaylight-inventory:nodes/node/{SWITCH}/table/0/flow/{NAME}'.format(SWITCH = tar, NAME = flowid)
+                requestNew = requests.put(uriNew, data=xml, headers=headers, auth=('admin', 'admin'))
+                if requestNew:
+                    print("[{GREEN}*{RESET}] FlowID {FLOWID} added.".format(GREEN = GREEN, RESET = RESET, FLOWID = flowid))
+                else:
+                    print("[{RED}*{RESET}] Error applying flow {FLOWID}.".format(RED = RED, RESET = RESET, FLOWID = flowid))
+                    print("[{RED}*{RESET}] Error: {REQUEST}".format(RED = RED, RESET = RESET, REQUEST = request))
+
+                input('BREAK HERE')
+            else:
+                # Flow ID not found
+                print("[{RED}*{RESET}] FlowID {FLOWID} not found.".format(RED = RED, RESET = RESET, FLOWID = mod))
+            print("[{GREEN}*{RESET}] Complete.".format(GREEN = GREEN, RESET = RESET))
+            input("Press any key to return to the Flows menu...")
+
+        # Delete flow rule
+        if state == '4':
+            print("[{GREEN}*{RESET}] Gathering info.".format(GREEN = GREEN, RESET = RESET))
+            time.sleep(0.2)
+            if len(switches) < 1:
+                if emptyList('switches') == False:
+                    return
+            print("----- All Flows: -----".center(105, " "))
+            newline()
+            for switch in switches:
+                response = requests.get('http://192.168.248.128:8181/restconf/operational/opendaylight-inventory:nodes/node/{SWITCH}/table/0'.format(SWITCH = switch.getName()), auth=('admin', 'admin'))
+                data = response.json()
+                newline()
+                flows[switch.getName()] = []
+                print("\tSwitch ID: {SWITCH}".format(SWITCH = switch.getName()))
+                for j in range(len(data['flow-node-inventory:table'][0]['flow'])):
+                    if data['flow-node-inventory:table'][0]['flow'][j]['id'][0] != 'L' and data['flow-node-inventory:table'][0]['flow'][j]['id'][0] != '#':
+                        flows[switch.getName()].append(data['flow-node-inventory:table'][0]['flow'][j]['id'])
+                if len(flows[switch.getName()]) > 0:
+                    for i in range(len(flows[switch.getName()])):
+                        print("\t\tFlow ID: {ID}".format(ID = flows[switch.getName()][i]))
+                else:
+                    print("\t\t{YELLOW}NOTICE{RESET} - No flows have been applied to this device.".format(YELLOW = YELLOW, RESET = RESET))
+
+            newline()
+
+            print("\tWhich flow would you like to delete?")
+            newline()
+            delFlow = input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET))
+            if delFlow in flows[switches[int(delFlow[5]) - 1].getName()]:
+                headers = {'Content-Type': 'application/xml'}
+
+                # Delete old request
+                uriDel = 'http://192.168.248.128:8181/restconf/config/opendaylight-inventory:nodes/node/{SWITCH}/table/0/flow/{NAME}'.format(SWITCH = switches[int(delFlow[5]) - 1].getName(), NAME = headers)
+                requestDel = requests.delete(uri, headers=headers, auth=('admin', 'admin'))
+                if requestDel:
+                    print("[{GREEN}*{RESET}] FlowID {FLOWID} removed.".format(GREEN = GREEN, RESET = RESET, FLOWID = mod))
+                else:
+                    print("[{RED}*{RESET}] Error removing flowID {FLOWID}.".format(RED = RED, RESET = RESET, FLOWID = mod))
+                    print("[{RED}*{RESET}] Error: {REQUEST}".format(RED = RED, RESET = RESET, REQUEST = request))
+            print("[{GREEN}*{RESET}] Complete.".format(GREEN = GREEN, RESET = RESET))
+            input("Press any key to return to the Flows menu...")
+
+        # Return to main menu
+        if state == '9' or state == 'x':
+            return
 
 # Classes
 class host():
@@ -311,16 +744,13 @@ try:
 
 
 
-        # Modify Flow
+        # Add Flow
         if state == '5':
-            print("This feature is under construction.")
-            print("\nThis feature would make an API request to the ODL controller that would resemble the following:")
-            print("POST http://192.168.248.128:8181/restconf/config/opendaylight-flow-table-statistics:get-flow-tables-statistics")
-            print("\n\nThe resules would be in JSON format, and would be parsed for relevant data.")
+            getFlows()
             x = input("\nPress any key to return to the main menu...")
 
         # Enf of Loop
-        os.system('cls')
+        os.system('cls' if os.name=='nt' else 'clear')
 
 except KeyboardInterrupt:
     newline(2)
