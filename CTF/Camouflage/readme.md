@@ -29,5 +29,5 @@ The flag was hidden in the Blue LSB bit 0.
 
 ### Flag
 ```
-ictf{y0U_mu5T_h@v3_4MAz!n9_I_s1gh7}
+ictf{y0U_mu5T_h@v3_4MAz!n9_I_s16h7}
 ```
