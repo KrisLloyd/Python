@@ -55,3 +55,4 @@
 * [Rotations](./Rotations)
 * [Camouflage](./Camouflage)
 * [sources-adventure-hardened](./sources-adventure-hardened)
+* [Look For It!](./LookForIt)
