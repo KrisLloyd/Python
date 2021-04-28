@@ -22,7 +22,7 @@ Since this is a forensics challenge, the obvious choice is to check the file for
 
 Moving forward, I went to [StegOnline](https://stegonline.georgeom.net/upload) and loaded the image for bitplane inspection. 
 
-The flag was higing on the Blue LSB bit 0.
+The flag was hidden in the Blue LSB bit 0.
 
 ![flag](flag.PNG)
 
