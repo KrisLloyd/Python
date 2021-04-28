@@ -3,9 +3,9 @@
 [< Back to Imaginary CTF](https://github.com/KrisLloyd/Python/tree/master/CTF#imaginary-ctf-ongoing-2021)
 ***
 
-# Camouflage
+# Look For It
 
-![Camouflage Challenge](Camouflage.PNG)
+![Look For It Challenge](LookForIt.PNG)
 
 ### Challenge:
 ##### Look for \`flag.txt\`.
