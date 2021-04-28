@@ -53,3 +53,4 @@
 
 ### Imaginary CTF (Ongoing 2021)
 * [Rotations](./Rotations)
+* [Camouflage](./Camouflage)
