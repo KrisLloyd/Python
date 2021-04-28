@@ -182,6 +182,7 @@ by OJ Reeves (@TheColonial) & Christian Mehlmauer (@_FireFart_)
 
 This pointed to the /payroll directory which was hosting the file **payrollinformationictf.json**:
 
+[Payroll json](payrollinformationictf.json)
 ![Payroll json](Payroll_json.PNG)
 
 From this json file, the flag was visible in the **ID Code** variable for each user.
