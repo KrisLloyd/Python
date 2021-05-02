@@ -6,18 +6,13 @@ import time
 import sys
 import re
 
-
-# r = requests.put()
-# r = requests.delete()
-# r = requests.head()
-# r = requests.options()
-
 # Global variables
 RED = "\u001b[31m"
 YELLOW = "\u001b[33m"
 BLUE = "\u001b[34m"
 GREEN = "\u001B[32m"
 PURPLE = "\u001B[35m"
+ORANGE = "\u001b[31;1m"
 RESET = "\u001b[0m"
 hosts = []
 switches = []
@@ -26,25 +21,24 @@ state = '0'
 
 # Assets
 odl = [
-"                                {RESET}".format(RESET = RESET),
-"                                {RESET}".format(RESET = RESET),
-"                                {RESET}".format(RESET = RESET),
-"            {YELLOW}#//////*    %       {RESET}".format(YELLOW = YELLOW, RESET = RESET),
-"     {YELLOW}&////# #//////*  /////     {RESET}".format(YELLOW = YELLOW, RESET = RESET),
-"   {YELLOW}///////////////////////////  {RESET}".format(YELLOW = YELLOW, RESET = RESET),
-"     {YELLOW}///////////////////////    {RESET}".format(YELLOW = YELLOW, RESET = RESET),
-" {YELLOW}//////////////{RED}((({YELLOW}//////////////{RESET}".format(YELLOW = YELLOW, RED = RED, RESET = RESET),
-" {YELLOW}*//////////{RED}(((((((({YELLOW}////////////{RESET}".format(YELLOW = YELLOW, RED = RED, RESET = RESET),
-" {YELLOW}*//////////{RED}(((((((({YELLOW}////////////{RESET}".format(YELLOW = YELLOW, RED = RED, RESET = RESET),
-"       {YELLOW}////////{RED}((({YELLOW}///////#      {RESET}".format(YELLOW = YELLOW, RED = RED, RESET = RESET),
-"    {YELLOW}#///////////////////////    {RESET}".format(YELLOW = YELLOW, RESET = RESET),
-"   {YELLOW}//////////////////////////&  {RESET}".format(YELLOW = YELLOW, RESET = RESET),
-"      {YELLOW}////# #//////*  /////     {RESET}".format(YELLOW = YELLOW, RESET = RESET),
-"            {YELLOW}#//////*            {RESET}".format(YELLOW = YELLOW, RESET = RESET),
-"                                {RESET}".format(YELLOW = YELLOW, RESET = RESET),
-"                                {RESET}".format(YELLOW = YELLOW, RESET = RESET),
-"                                {RESET}".format(YELLOW = YELLOW, RESET = RESET)]
-
+"                {YELLOW}.........{RESET}                ".format(YELLOW = YELLOW, RESET = RESET),
+"                {YELLOW}/////////      .{RESET}         ".format(YELLOW = YELLOW, RESET = RESET),
+"       {YELLOW}/////    /////////    /////{RESET}       ".format(YELLOW = YELLOW, RESET = RESET),
+"     {YELLOW}////////** ///////// ,////////*.{RESET}    ".format(YELLOW = YELLOW, RESET = RESET),
+"    {YELLOW}*//////////*{RED}({YELLOW}//////*{RED}({YELLOW}/*/////////*{RESET}    ".format(YELLOW = YELLOW, RED = RED, RESET = RESET),
+"      {YELLOW}*////////*{RED}(((({YELLOW}/{RED}(((({YELLOW}/*///////*{RESET}      ".format(YELLOW = YELLOW, RED = RED, RESET = RESET),
+"          {YELLOW}*/***//{RED}((((((((({YELLOW}******/{RESET}        ".format(YELLOW = YELLOW, RED = RED, RESET = RESET),
+"{YELLOW}.//////////{RED}((((((########((((({YELLOW}//////////*{RESET}".format(YELLOW = YELLOW, RED = RED, RESET = RESET),
+"{YELLOW}.////////////*{RED}((#########(({YELLOW}*/////////////{RESET}".format(YELLOW = YELLOW, RED = RED, RESET = RESET),
+"{YELLOW}.//////////{RED}((((((########((((({YELLOW}///////////{RESET}".format(YELLOW = YELLOW, RED = RED, RESET = RESET),
+"         {YELLOW}///////{RED}((((((((({YELLOW}*****//{RESET}         ".format(YELLOW = YELLOW, RED = RED, RESET = RESET),
+"      {YELLOW}*////////*{RED}(((({YELLOW}/{RED}(((({YELLOW}/*///////*{RESET}      ".format(YELLOW = YELLOW, RED = RED, RESET = RESET),
+"    {YELLOW}*///////////{RED}({YELLOW}///////{RED}({YELLOW}/*/////////*{RESET}    ".format(YELLOW = YELLOW, RED = RED, RESET = RESET),
+"     {YELLOW}////////** ///////// ,////////*.{RESET}    ".format(YELLOW = YELLOW, RESET = RESET),
+"       {YELLOW}*////    /////////    /////{RESET}       ".format(YELLOW = YELLOW, RESET = RESET),
+"                {YELLOW}/////////      .{RESET}         ".format(YELLOW = YELLOW, RESET = RESET),
+"                {YELLOW}.........{RESET}                ".format(YELLOW = YELLOW, RESET = RESET),
+"                                         ".format(YELLOW = YELLOW, RESET = RESET)]
 python = [
 "               {BLUE}#(((((((((((((((#{RESET}".format(BLUE = BLUE, RESET = RESET),
 "            {BLUE}&(((( (((((((((((((((({RESET}".format(BLUE = BLUE, RESET = RESET),
@@ -65,20 +59,53 @@ python = [
 "             {YELLOW}*********************%{RESET}".format(YELLOW = YELLOW, RESET = RESET),
 "                {YELLOW}#**************%{RESET}".format(YELLOW = YELLOW, RESET = RESET)]
 
+
+# Classes
+class host():
+    def __init__(self, name, ip, mac):
+        self.name = name
+        self.ip = ip
+        self.mac = mac
+
+    def __str__(self):
+        return "Host: {}\n\tIP: {}\n\tMAC: {}".format(self.name, self.ip, self.mac)
+
+    def getName(self):
+        return self.name
+
+    def getIP(self):
+        return self.ip
+
+    def getMAC(self):
+        return self.mac
+
+class switch():
+    def __init__(self, name):
+        self.name = name
+
+    def __str__(self):
+        return "Switch-id: {}".format(self.name)
+
+    def getName(self):
+        return self.name
+
+# Functions
 def newline(num=1):
     for i in range(num):
         print()
 
+
 def welcome():
     os.system('cls' if os.name=='nt' else 'clear')
-    newline(2)
+    newline(3)
     print("OpenDaylight SDN Controller Policy Firewall".center(105, "="))
     newline(2)
     for i in range(len(odl)):
-        print("\t " + odl[i] + "        " + python[i])
+        print("    " + odl[i] + "        " + python[i])
     newline(2)
     print("=".center(105, "="))
-    time.sleep(2.5)
+    time.sleep(1.5)
+
 
 def emptyList(listType):
     print("[{YELLOW}*{RESET}] Warning: No {type} found.".format(YELLOW = YELLOW, RESET = RESET, type = listType))
@@ -98,6 +125,7 @@ def emptyList(listType):
         if op.lower() == 'x' or op.lower() == 'n':
             return False
     return True
+
 
 def menu():
     os.system('cls' if os.name=='nt' else 'clear')
@@ -319,6 +347,9 @@ def getFlows():
             os.system('cls' if os.name=='nt' else 'clear')
             print("----- Add A Flow: -----".center(105, " "))
             newline()
+
+            # Todo: Protocol and MAC matching
+            """
             print("\tSelect the match criteria:")
             newline()
             print("\tSelection\tHost ID:\t\t\tIP Address:\tMAC Address:\t\tSRC: DST:")
@@ -341,6 +372,9 @@ def getFlows():
             newline()
             match = input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET))
             newline(2)
+            """
+
+            match = 'IP'
             print("\tSelect the switch(es) to apply the flow rule:")
             newline()
             print("\tSelection:\tSwitch:")
@@ -349,7 +383,7 @@ def getFlows():
                 print("\t[{i}]\t{SWITCH}".format(i = i + 1, SWITCH = switches[i].getName()))
 
             newline(2)
-            print("\tSeparate multiple hosts with a space.")
+            print("\tSeparate multiple switches with a space.")
             print("\tExample:")
             print("\t\t{GREEN}>>>{RESET} 4 6".format(GREEN = GREEN, RESET = RESET))
             newline()
@@ -375,9 +409,14 @@ def getFlows():
                 print("\t\tIP: {}".format(hosts[destinations[i] - 1].getIP()))
                 print("\t\tMAC: {}".format(hosts[destinations[i] - 1].getMAC()))
             newline()
+
+            # Todo: Protocol and MAC matching
+            """
             print("\tMatch:")
             print("\t\t{MATCH}".format(MATCH = match))
             newline()
+            """
+
             print("\tTargets:")
             for i in range(len(targets)):
                 print("\t\t{}".format(switches[targets[i] - 1].getName()))
@@ -427,14 +466,17 @@ def getFlows():
   </instructions>
 </flow>""".format(FLOWID = flowid, SRC = hosts[sources[j] - 1].getIP(), DST = hosts[destinations[k] - 1].getIP())
                             headers = {'Content-Type': 'application/xml'}
-                            uri = 'http://192.168.248.128:8181/restconf/config/opendaylight-inventory:nodes/node/{SWITCH}/table/0/flow/{NAME}'.format(SWITCH = switches[targets[0] - 1].getName(), NAME = flowid)
+                            uri = 'http://192.168.248.128:8181/restconf/config/opendaylight-inventory:nodes/node/{SWITCH}/table/0/flow/{NAME}'.format(SWITCH = switches[targets[i] - 1].getName(), NAME = flowid)
                             request = requests.put(uri, data=xml, headers=headers, auth=('admin', 'admin'))
 
                             if request:
+                                print("[{GREEN}*{RESET}] Request status: {REQUEST}.".format(GREEN = GREEN, RESET = RESET, REQUEST = request))
                                 print("[{GREEN}*{RESET}] FlowID {FLOWID} added sucessfully.".format(GREEN = GREEN, RESET = RESET, FLOWID = flowid))
+                                newline()
                             else:
                                 print("[{RED}*{RESET}] Error applying flow {FLOWID}.".format(RED = RED, RESET = RESET, FLOWID = flowid))
                                 print("[{RED}*{RESET}] Error: {REQUEST}".format(RED = RED, RESET = RESET, REQUEST = request))
+                                newline()
                 print("[{GREEN}*{RESET}] Complete.".format(GREEN = GREEN, RESET = RESET, FLOWID = flowid))
                 input('Press any key to return to the Flows menu...')
             else:
@@ -469,10 +511,10 @@ def getFlows():
             newline()
             mod = input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET))
             if mod in flows[switches[int(mod[5]) - 1].getName()]:
-                # Flow IO found
+                # Flow ID found
                 newline()
                 print("[{GREEN}*{RESET}] Requesting Flow ID {FLOWID} details from controller.".format(GREEN = GREEN, RESET = RESET, FLOWID = mod))
-                response = requests.get('http://192.168.248.128:8181/restconf/operational/opendaylight-inventory:nodes/node/openflow:4/table/0/flow/{FLOWID}'.format(FLOWID = mod), auth=('admin', 'admin'))
+                response = requests.get('http://192.168.248.128:8181/restconf/operational/opendaylight-inventory:nodes/node/{SWITCH}/table/0/flow/{FLOWID}'.format(SWITCH = switches[int(mod[5]) - 1].getName(), FLOWID = mod), auth=('admin', 'admin'))
                 if response:
                     print("[{GREEN}*{RESET}] Request sucessful.".format(GREEN = GREEN, RESET = RESET))
                 else:
@@ -481,6 +523,7 @@ def getFlows():
                     print("[{RED}*{RESET}] Error {ERROR}.".format(RED = RED, RESET = RESET, ERROR = response))
                     newline()
                     input("Press any key to return to the Flows menu...")
+                    continue
 
                 data = response.json()
                 newline(2)
@@ -494,8 +537,11 @@ def getFlows():
                 print("\t-------------------")
                 print("\t[1] Source: {SRC}".format(SRC = src))
                 print("\t[2] Destination: {DST}".format(DST = dst))
-                print("\t[3] Match Type: {MAT}".format(MAT = type))
-                print("\t[4] Switch: {SWITCH}".format(SWITCH = tar))
+
+                # Todo: Protocol and MAC matching
+                """print("\t[3] Match Type: {MAT}".format(MAT = type))"""
+
+                print("\t[3] Switch: {SWITCH}".format(SWITCH = tar))
 
                 newline(2)
                 print("What would you like to change?")
@@ -509,29 +555,23 @@ def getFlows():
                     newline(2)
                     print("What is the new destination address?")
                     dst = input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET))
-                if change == '3':
+
+                # Todo: Protocol and MAC matching
+                """if change == '3':
                     newline(2)
                     print("What is the new match type?")
                     type = input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET))
                     print("What is the new source address?")
                     src = input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET))
                     print("What is the new destination address?")
-                    dst = input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET))
-                if change == '4':
+                    dst = input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET))"""
+
+                if change == '3':
                     newline(2)
                     print("What is the new switch?")
                     tar = input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET))
 
                 print("[{GREEN}*{RESET}] Updating request.".format(GREEN = GREEN, RESET = RESET))
-
-                print('DEBUG')
-                print(src)
-                print(dst)
-                print(tar)
-                print(type)
-                flowid = 'h' + src[-1] + 'h' + dst[-1] + 's' + tar[-1] + '-' + type[:3]
-                print(flowid)
-                print('DEBUG END')
 
                 flowid = 'h' + src[-1] + 'h' + dst[-1] + 's' + tar[-1] + '-' + type[:3]
                 xml = """<?xml version="1.0"?>
@@ -565,7 +605,7 @@ def getFlows():
 
                 # Delete old request
                 uriDel = 'http://192.168.248.128:8181/restconf/config/opendaylight-inventory:nodes/node/{SWITCH}/table/0/flow/{NAME}'.format(SWITCH = tar, NAME = mod)
-                requestDel = requests.delete(uri, headers=headers, auth=('admin', 'admin'))
+                requestDel = requests.delete(uriDel, headers=headers, auth=('admin', 'admin'))
                 if requestDel:
                     print("[{GREEN}*{RESET}] FlowID {FLOWID} removed.".format(GREEN = GREEN, RESET = RESET, FLOWID = mod))
                 else:
@@ -580,8 +620,6 @@ def getFlows():
                 else:
                     print("[{RED}*{RESET}] Error applying flow {FLOWID}.".format(RED = RED, RESET = RESET, FLOWID = flowid))
                     print("[{RED}*{RESET}] Error: {REQUEST}".format(RED = RED, RESET = RESET, REQUEST = request))
-
-                input('BREAK HERE')
             else:
                 # Flow ID not found
                 print("[{RED}*{RESET}] FlowID {FLOWID} not found.".format(RED = RED, RESET = RESET, FLOWID = mod))
@@ -597,6 +635,7 @@ def getFlows():
                     return
             print("----- All Flows: -----".center(105, " "))
             newline()
+            empty = True
             for switch in switches:
                 response = requests.get('http://192.168.248.128:8181/restconf/operational/opendaylight-inventory:nodes/node/{SWITCH}/table/0'.format(SWITCH = switch.getName()), auth=('admin', 'admin'))
                 data = response.json()
@@ -607,6 +646,7 @@ def getFlows():
                     if data['flow-node-inventory:table'][0]['flow'][j]['id'][0] != 'L' and data['flow-node-inventory:table'][0]['flow'][j]['id'][0] != '#':
                         flows[switch.getName()].append(data['flow-node-inventory:table'][0]['flow'][j]['id'])
                 if len(flows[switch.getName()]) > 0:
+                    empty = False
                     for i in range(len(flows[switch.getName()])):
                         print("\t\tFlow ID: {ID}".format(ID = flows[switch.getName()][i]))
                 else:
@@ -614,56 +654,73 @@ def getFlows():
 
             newline()
 
+            if empty:
+                print("[{YELLOW}*{RESET}] There are no flows available to delete".format(YELLOW = YELLOW, RESET = RESET))
+                input('Press any key to return to the Flows menu...')
+                continue
             print("\tWhich flow would you like to delete?")
             newline()
-            delFlow = input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET))
-            if delFlow in flows[switches[int(delFlow[5]) - 1].getName()]:
+            while True:
+                delFlow = input("{GREEN}>>>{RESET} ".format(GREEN = GREEN, RESET = RESET))
+                try:
+                    tar = switches[int(delFlow[5]) - 1].getName()
+                    break
+                except:
+                    print("[{RED}*{RESET}] Error: Please verify flow name and try again.".format(RED = RED, RESET = RESET))
+            if delFlow in flows[tar]:
+                src = hosts[int(delFlow[1]) - 1].getIP()
+                dst = hosts[int(delFlow[3]) - 1].getIP()
+                xml = """<?xml version="1.0"?>
+<flow xmlns="urn:opendaylight:flow:inventory">
+  <priority>1000</priority>
+  <flow-name>{FLOWID}</flow-name>
+  <match>
+    <ethernet-match>
+      <ethernet-type>
+        <type>2048</type>
+      </ethernet-type>
+    </ethernet-match>
+    <ipv4-source>{SRC}/32</ipv4-source>
+    <ipv4-destination>{DST}/32</ipv4-destination>
+  </match>
+  <id>{FLOWID}</id>
+  <table_id>0</table_id>
+  <instructions>
+    <instruction>
+      <order>0</order>
+      <apply-actions>
+        <action>
+          <order>0</order>
+          <drop-action/>
+        </action>
+      </apply-actions>
+    </instruction>
+  </instructions>
+</flow>""".format(FLOWID = delFlow, SRC = src, DST = dst)
                 headers = {'Content-Type': 'application/xml'}
 
                 # Delete old request
-                uriDel = 'http://192.168.248.128:8181/restconf/config/opendaylight-inventory:nodes/node/{SWITCH}/table/0/flow/{NAME}'.format(SWITCH = switches[int(delFlow[5]) - 1].getName(), NAME = headers)
-                requestDel = requests.delete(uri, headers=headers, auth=('admin', 'admin'))
+                uriDel = 'http://192.168.248.128:8181/restconf/config/opendaylight-inventory:nodes/node/{SWITCH}/table/0/flow/{NAME}'.format(SWITCH = tar, NAME = delFlow)
+                requestDel = requests.delete(uriDel, headers=headers, auth=('admin', 'admin'))
+
                 if requestDel:
-                    print("[{GREEN}*{RESET}] FlowID {FLOWID} removed.".format(GREEN = GREEN, RESET = RESET, FLOWID = mod))
+                    print("[{GREEN}*{RESET}] Resuest status: {REQUEST}".format(GREEN = GREEN, RESET = RESET, REQUEST = requestDel))
+                    print("[{GREEN}*{RESET}] FlowID {FLOWID} removed.".format(GREEN = GREEN, RESET = RESET, FLOWID = delFlow))
                 else:
-                    print("[{RED}*{RESET}] Error removing flowID {FLOWID}.".format(RED = RED, RESET = RESET, FLOWID = mod))
-                    print("[{RED}*{RESET}] Error: {REQUEST}".format(RED = RED, RESET = RESET, REQUEST = request))
+                    print("[{RED}*{RESET}] Error removing flowID {FLOWID}.".format(RED = RED, RESET = RESET, FLOWID = delFlow))
+                    print("[{RED}*{RESET}] Error: {REQUEST}".format(RED = RED, RESET = RESET, REQUEST = requestDel))
+            else:
+                print("[{RED}*{RESET}] Error removing flowID {FLOWID}, entry not found.".format(RED = RED, RESET = RESET, FLOWID = delFlow))
+                print("[{RED}*{RESET}] Aborting.".format(RED = RED, RESET = RESET))
+                input("Press any key to return to the Flows menu...")
+                continue
+
             print("[{GREEN}*{RESET}] Complete.".format(GREEN = GREEN, RESET = RESET))
             input("Press any key to return to the Flows menu...")
 
         # Return to main menu
         if state == '9' or state == 'x':
             return
-
-# Classes
-class host():
-    def __init__(self, name, ip, mac):
-        self.name = name
-        self.ip = ip
-        self.mac = mac
-
-    def __str__(self):
-        return "Host: {}\n\tIP: {}\n\tMAC: {}".format(self.name, self.ip, self.mac)
-
-    def getName(self):
-        return self.name
-
-    def getIP(self):
-        return self.ip
-
-    def getMAC(self):
-        return self.mac
-
-
-class switch():
-    def __init__(self, name):
-        self.name = name
-
-    def __str__(self):
-        return "Switch-id: {}".format(self.name)
-
-    def getName(self):
-        return self.name
 
 
 # Menu
@@ -742,18 +799,21 @@ try:
             else:
                 continue
 
-
-
         # Add Flow
         if state == '5':
             getFlows()
             x = input("\nPress any key to return to the main menu...")
 
-        # Enf of Loop
-        os.system('cls' if os.name=='nt' else 'clear')
+        # Enf of main() loop
 
 except KeyboardInterrupt:
     newline(2)
     print("[{RED}*{RESET}] User aborted operation.".format(RED = RED, RESET = RESET))
     print("[{RED}*{RESET}] Exiting...".format(RED = RED, RESET = RESET))
     sys.exit(1)
+
+newline(2)
+print("[{RED}*{RESET}] User requested termination.".format(RED = RED, RESET = RESET))
+print("[{RED}*{RESET}] Exiting...".format(RED = RED, RESET = RESET))
+time.sleep(0.5)
+sys.exit(0)
