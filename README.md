@@ -6,6 +6,12 @@ Various random snippits and project in Python.
 
 # Projects
 
+### Special Projects
+
+* <a href="https://github.com/KrisLloyd/Python/tree/master/OpenDaylight#about" target="_blank">OpenDaylight SDN - Policy Controller</a>
+
+  Program that uses REST APIs to interact with the OpenDaylight SDN controller to implement forwarding policy.
+
 ### Utilities
 
 * <a href="https://github.com/KrisLloyd/Python/tree/master/AreaCalculator#about" target="_blank">Area Calculator</a>
