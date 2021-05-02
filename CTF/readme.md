@@ -52,7 +52,17 @@
 
 
 ### Imaginary CTF (Ongoing 2021)
+#### [ Crypto ]
+
 * [Rotations](./Rotations)
+
+#### [ Forensics ]
+
 * [Camouflage](./Camouflage)
+
+#### [ Web ]
 * [sources-adventure-hardened](./sources-adventure-hardened)
 * [Look For It!](./LookForIt)
+
+#### [ Pwn ]
+* [&aaa](./aaa)
