@@ -12,6 +12,14 @@ Various random snippits and project in Python.
 
   Program that uses REST APIs to interact with the OpenDaylight SDN controller to implement forwarding policy.
 
+<br></br>
+### Competitions
+
+* <a href="https://github.com/KrisLloyd/Python/tree/master/OpenDaylight#about" target="_blank">Google Kick Start</a>
+
+  One of Google's online coding competitions offering programmers of all skill levels the opportunity to hone your skills through a series of online rounds hosted throughout the year.
+
+<br></br>
 ### Utilities
 
 * <a href="https://github.com/KrisLloyd/Python/tree/master/AreaCalculator#about" target="_blank">Area Calculator</a>
@@ -26,7 +34,7 @@ Various random snippits and project in Python.
 
   Python telnet server and client. 
 
-
+<br></br>
 ### Games
 
 * <a href="https://github.com/KrisLloyd/Python/tree/master/Battleship#about" target="_blank">Battleship</a>
