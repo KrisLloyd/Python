@@ -15,7 +15,7 @@ Various random snippits and project in Python.
 <br></br>
 ### Competitions
 
-* <a href="https://github.com/KrisLloyd/Python/tree/master/OpenDaylight#about" target="_blank">Google Kick Start</a>
+* <a href="https://github.com/KrisLloyd/Python/tree/master/GKS#about" target="_blank">Google Kick Start</a>
 
   One of Google's online coding competitions offering programmers of all skill levels the opportunity to hone your skills through a series of online rounds hosted throughout the year.
 
