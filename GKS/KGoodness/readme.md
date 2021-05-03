@@ -1,6 +1,6 @@
 [< Back to Python Projects](https://github.com/KrisLloyd/Python#python)
 
-[< Back to Google Kick Start](https://github.com/KrisLloyd/Python/blob/master/GKS/readme.md#about)
+[< Back to Google Kick Start](https://github.com/KrisLloyd/Python/tree/master/GKS#aboutt)
 ***
 
 # Problem
